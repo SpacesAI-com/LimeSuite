@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="$(ProjectDir)Logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../external/kissFFT\kiss_fft.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)windowFunction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)VersionInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)SystemResources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)BuiltinConnections.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)ADF4002/ADF4002.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m_mcu/MCU_BD.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m_mcu/MCU_File.cpp" />
+    <ClCompile Include="$(ProjectDir)ConnectionRegistry/IConnection.cpp" />
+    <ClCompile Include="$(ProjectDir)ConnectionRegistry/ConnectionHandle.cpp" />
+    <ClCompile Include="$(ProjectDir)ConnectionRegistry/ConnectionRegistry.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/LMS7002M_RegistersMap.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/LMS7002M_parameters.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/LMS7002M.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/LMS7002M_RxTxCalibrations.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/LMS7002M_BaseCalibrations.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/mcu_dc_iq_calibration.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/LMS7002M_filtersCalibration.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/LMS7002M_gainCalibrations.cpp" />
+    <ClCompile Include="$(ProjectDir)protocols/LMS64CProtocol.cpp" />
+    <ClCompile Include="$(ProjectDir)protocols/Streamer.cpp" />
+    <ClCompile Include="$(ProjectDir)protocols/ConnectionImages.cpp" />
+    <ClCompile Include="$(ProjectDir)Si5351C/Si5351C.cpp" />
+    <ClCompile Include="$(ProjectDir)API/lms7_api.cpp" />
+    <ClCompile Include="$(ProjectDir)API/lms7_device.cpp" />
+    <ClCompile Include="$(ProjectDir)API/LmsGeneric.cpp" />
+    <ClCompile Include="$(ProjectDir)API/qLimeSDR.cpp" />
+    <ClCompile Include="$(ProjectDir)API/LimeSDR_mini.cpp" />
+    <ClCompile Include="$(ProjectDir)API/LimeSDR.cpp" />
+    <ClCompile Include="$(ProjectDir)API/LimeNET_micro.cpp" />
+    <ClCompile Include="$(ProjectDir)API/LimeSDR_PCIE.cpp" />
+    <ClCompile Include="$(ProjectDir)API/LimeSDR_Core.cpp" />
+    <ClCompile Include="$(ProjectDir)FPGA_common/FPGA_common.cpp" />
+    <ClCompile Include="$(ProjectDir)FPGA_common/FPGA_Mini.cpp" />
+    <ClCompile Include="$(ProjectDir)FPGA_common/FPGA_Q.cpp" />
+    <ClCompile Include="$(ProjectDir)threadHelper/threadHelper.cpp" />
+    <ClCompile Include="$(ProjectDir)GFIR/corrections.c" />
+    <ClCompile Include="$(ProjectDir)GFIR/gfir_lms.c" />
+    <ClCompile Include="$(ProjectDir)GFIR/lms.c" />
+    <ClCompile Include="$(ProjectDir)GFIR/recipes.c" />
+    <ClCompile Include="$(ProjectDir)GFIR/rounding.c" />
+    <ClCompile Include="$(ProjectDir)ConnectionFTDI/ConnectionFT601.cpp" />
+    <ClCompile Include="$(ProjectDir)ConnectionFTDI/ConnectionFT601Entry.cpp" />
+    <ClCompile Include="$(ProjectDir)ConnectionXillybus/ConnectionXillybusEntry.cpp" />
+    <ClCompile Include="$(ProjectDir)ConnectionXillybus/ConnectionXillybus.cpp" />
+    <ClCompile Include="$(ProjectDir)limeRFE/limeRFE_cmd.cpp" />
+    <ClCompile Include="$(ProjectDir)limeRFE/limeRFE_api.cpp" />
+    <ClCompile Include="$(ProjectDir)limeRFE/RFE_Device.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="$(ProjectDir)CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{CB9DA81F-CA09-368D-92DE-194F91D19FEE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

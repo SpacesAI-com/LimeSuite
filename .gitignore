@@ -1,3 +1,4 @@
+*.cmake
 builddir/**
 build/**
 mcu_program/*.lst
@@ -8,3 +9,13 @@ mcu_program/*.plg
 mcu_program/*.uvopt
 mcu_program/*.uvproj
 docs/LMS_API_Documentation/*
+.vs/
+obj/
+x64.Debug/
+x64.Release/
+Debug/
+Release/
+bin/
+CMakeFiles/
+*.dir/
+CMakeCache.txt

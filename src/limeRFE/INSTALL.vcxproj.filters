@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\FirmwareWorks\LimeSuite\CMakeFiles\4ff9b1d85586b34a5b0bbae64445f4e6\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{48DB2218-025B-35B4-B868-FA42289AF752}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

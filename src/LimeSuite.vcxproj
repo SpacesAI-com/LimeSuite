@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{94FE0CDB-95EF-3674-9A37-FF900AF1243D}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>LimeSuite</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir>$(SolutionDir)../$(Platform).$(Configuration)/</OutDir>
+    <IntDir>$(SolutionDir)../obj/$(Platform).$(Configuration)/$(ProjectName)/</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)../external/msvc;$(ProjectDir);$(ProjectDir)API;$(ProjectDir)lime;$(ProjectDir)GFIR;$(ProjectDir)protocols;$(ProjectDir)ConnectionRegistry;$(ProjectDir)lms7002m_mcu;$(ProjectDir)ADF4002;$(ProjectDir)Si5351C;$(ProjectDir)lms7002m;$(ProjectDir)FPGA_common;$(ProjectDir)../external/cpp-feather-ini-parser;$(ProjectDir)../external/kissFFT;$(ProjectDir)limeRFE;$(ProjectDir)threadHelper;$(ProjectDir)ConnectionFTDI\FTD3XXLibrary;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <MinimalRebuild>
+      </MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;LIME_DLL;_CRT_SECURE_NO_WARNINGS;FTD3XX_STATIC;CMAKE_INTDIR="Debug";LIME_DLL_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;LIME_DLL;_CRT_SECURE_NO_WARNINGS;FTD3XX_STATIC;CMAKE_INTDIR=\"Debug\";LIME_DLL_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)../external/msvc;$(ProjectDir);$(ProjectDir)API;$(ProjectDir)lime;$(ProjectDir)GFIR;$(ProjectDir)protocols;$(ProjectDir)ConnectionRegistry;$(ProjectDir)lms7002m_mcu;$(ProjectDir)ADF4002;$(ProjectDir)Si5351C;$(ProjectDir)lms7002m;$(ProjectDir)FPGA_common;$(ProjectDir)../external/cpp-feather-ini-parser;$(ProjectDir)../external/kissFFT;$(ProjectDir)limeRFE;$(ProjectDir)threadHelper;$(ProjectDir)ConnectionFTDI\FTD3XXLibrary;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>$(ProjectDir)../external/msvc;$(ProjectDir);$(ProjectDir)API;$(ProjectDir)lime;$(ProjectDir)GFIR;$(ProjectDir)protocols;$(ProjectDir)ConnectionRegistry;$(ProjectDir)lms7002m_mcu;$(ProjectDir)ADF4002;$(ProjectDir)Si5351C;$(ProjectDir)lms7002m;$(ProjectDir)FPGA_common;$(ProjectDir)../external/cpp-feather-ini-parser;$(ProjectDir)../external/kissFFT;$(ProjectDir)limeRFE;$(ProjectDir)threadHelper;$(ProjectDir)ConnectionFTDI\FTD3XXLibrary;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>ConnectionFTDI\FTD3XXLibrary\x64\Static\FTD3XX.lib;SetupAPI.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/FirmwareWorks/LimeSuite/src/Debug/LimeSuite.lib</ImportLibrary>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)../external/msvc;$(ProjectDir);$(ProjectDir)API;$(ProjectDir)lime;$(ProjectDir)GFIR;$(ProjectDir)protocols;$(ProjectDir)ConnectionRegistry;$(ProjectDir)lms7002m_mcu;$(ProjectDir)ADF4002;$(ProjectDir)Si5351C;$(ProjectDir)lms7002m;$(ProjectDir)FPGA_common;$(ProjectDir)../external/cpp-feather-ini-parser;$(ProjectDir)../external/kissFFT;$(ProjectDir)limeRFE;$(ProjectDir)threadHelper;$(ProjectDir)ConnectionFTDI\FTD3XXLibrary;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild>
+      </MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;LIME_DLL;_CRT_SECURE_NO_WARNINGS;FTD3XX_STATIC;CMAKE_INTDIR="Release";LIME_DLL_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;LIME_DLL;_CRT_SECURE_NO_WARNINGS;FTD3XX_STATIC;CMAKE_INTDIR=\"Release\";LIME_DLL_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)../external/msvc;$(ProjectDir);$(ProjectDir)API;$(ProjectDir)lime;$(ProjectDir)GFIR;$(ProjectDir)protocols;$(ProjectDir)ConnectionRegistry;$(ProjectDir)lms7002m_mcu;$(ProjectDir)ADF4002;$(ProjectDir)Si5351C;$(ProjectDir)lms7002m;$(ProjectDir)FPGA_common;$(ProjectDir)../external/cpp-feather-ini-parser;$(ProjectDir)../external/kissFFT;$(ProjectDir)limeRFE;$(ProjectDir)threadHelper;$(ProjectDir)ConnectionFTDI\FTD3XXLibrary;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>$(ProjectDir)../external/msvc;$(ProjectDir);$(ProjectDir)API;$(ProjectDir)lime;$(ProjectDir)GFIR;$(ProjectDir)protocols;$(ProjectDir)ConnectionRegistry;$(ProjectDir)lms7002m_mcu;$(ProjectDir)ADF4002;$(ProjectDir)Si5351C;$(ProjectDir)lms7002m;$(ProjectDir)FPGA_common;$(ProjectDir)../external/cpp-feather-ini-parser;$(ProjectDir)../external/kissFFT;$(ProjectDir)limeRFE;$(ProjectDir)threadHelper;$(ProjectDir)ConnectionFTDI\FTD3XXLibrary;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>ConnectionFTDI\FTD3XXLibrary\x64\Static\FTD3XX.lib;SetupAPI.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/FirmwareWorks/LimeSuite/src/Release/LimeSuite.lib</ImportLibrary>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="$(ProjectDir)CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/FirmwareWorks/LimeSuite/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/FirmwareWorks/LimeSuite -BD:/FirmwareWorks/LimeSuite --check-stamp-file D:/FirmwareWorks/LimeSuite/src/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeDependentOption.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CheckCSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CheckCXXSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\FeatureSummary.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\FindThreads.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\FindwxWidgets.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Internal\CheckSourceCompiles.cmake;D:\FirmwareWorks\LimeSuite\cmake\Modules\CheckAtomic.cmake;D:\FirmwareWorks\LimeSuite\cmake\Modules\FindCyAPI.cmake;$(ProjectDir)ConnectionEVB7COM\CMakeLists.txt;$(ProjectDir)ConnectionFTDI\CMakeLists.txt;$(ProjectDir)ConnectionFX3\CMakeLists.txt;$(ProjectDir)ConnectionRegistry\BuiltinConnections.in.cpp;$(ProjectDir)ConnectionSPI\CMakeLists.txt;$(ProjectDir)ConnectionSTREAM_UNITE\CMakeLists.txt;$(ProjectDir)ConnectionXillybus\CMakeLists.txt;$(ProjectDir)LimeSuite.pc.in;$(ProjectDir)SystemResources.in.cpp;$(ProjectDir)VersionInfo.in.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/FirmwareWorks/LimeSuite/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/FirmwareWorks/LimeSuite -BD:/FirmwareWorks/LimeSuite --check-stamp-file D:/FirmwareWorks/LimeSuite/src/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeDependentOption.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CheckCSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CheckCXXSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\FeatureSummary.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\FindThreads.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\FindwxWidgets.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Internal\CheckSourceCompiles.cmake;D:\FirmwareWorks\LimeSuite\cmake\Modules\CheckAtomic.cmake;D:\FirmwareWorks\LimeSuite\cmake\Modules\FindCyAPI.cmake;$(ProjectDir)ConnectionEVB7COM\CMakeLists.txt;$(ProjectDir)ConnectionFTDI\CMakeLists.txt;$(ProjectDir)ConnectionFX3\CMakeLists.txt;$(ProjectDir)ConnectionRegistry\BuiltinConnections.in.cpp;$(ProjectDir)ConnectionSPI\CMakeLists.txt;$(ProjectDir)ConnectionSTREAM_UNITE\CMakeLists.txt;$(ProjectDir)ConnectionXillybus\CMakeLists.txt;$(ProjectDir)LimeSuite.pc.in;$(ProjectDir)SystemResources.in.cpp;$(ProjectDir)VersionInfo.in.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(ProjectDir)Logger.cpp" />
+    <ClCompile Include="$(ProjectDir)ADF4002/ADF4002.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m_mcu/MCU_BD.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m_mcu/MCU_File.cpp" />
+    <ClCompile Include="$(ProjectDir)ConnectionRegistry/IConnection.cpp" />
+    <ClCompile Include="$(ProjectDir)ConnectionRegistry/ConnectionHandle.cpp" />
+    <ClCompile Include="$(ProjectDir)ConnectionRegistry/ConnectionRegistry.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/LMS7002M_RegistersMap.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/LMS7002M_parameters.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/LMS7002M.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/LMS7002M_RxTxCalibrations.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/LMS7002M_BaseCalibrations.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/mcu_dc_iq_calibration.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/LMS7002M_filtersCalibration.cpp" />
+    <ClCompile Include="$(ProjectDir)lms7002m/LMS7002M_gainCalibrations.cpp" />
+    <ClCompile Include="$(ProjectDir)protocols/LMS64CProtocol.cpp" />
+    <ClCompile Include="$(ProjectDir)protocols/Streamer.cpp" />
+    <ClCompile Include="$(ProjectDir)protocols/ConnectionImages.cpp" />
+    <ClCompile Include="$(ProjectDir)Si5351C/Si5351C.cpp" />
+    <ClCompile Include="$(ProjectDir)../external/kissFFT\kiss_fft.c" />
+    <ClCompile Include="$(ProjectDir)API/lms7_api.cpp" />
+    <ClCompile Include="$(ProjectDir)API/lms7_device.cpp" />
+    <ClCompile Include="$(ProjectDir)API/LmsGeneric.cpp" />
+    <ClCompile Include="$(ProjectDir)API/qLimeSDR.cpp" />
+    <ClCompile Include="$(ProjectDir)API/LimeSDR_mini.cpp" />
+    <ClCompile Include="$(ProjectDir)API/LimeSDR.cpp" />
+    <ClCompile Include="$(ProjectDir)API/LimeNET_micro.cpp" />
+    <ClCompile Include="$(ProjectDir)API/LimeSDR_PCIE.cpp" />
+    <ClCompile Include="$(ProjectDir)API/LimeSDR_Core.cpp" />
+    <ClCompile Include="$(ProjectDir)FPGA_common/FPGA_common.cpp" />
+    <ClCompile Include="$(ProjectDir)FPGA_common/FPGA_Mini.cpp" />
+    <ClCompile Include="$(ProjectDir)FPGA_common/FPGA_Q.cpp" />
+    <ClCompile Include="$(ProjectDir)windowFunction.cpp" />
+    <ClCompile Include="$(ProjectDir)threadHelper/threadHelper.cpp" />
+    <ClCompile Include="$(ProjectDir)VersionInfo.cpp" />
+    <ClCompile Include="$(ProjectDir)SystemResources.cpp" />
+    <ClCompile Include="$(ProjectDir)GFIR/corrections.c" />
+    <ClCompile Include="$(ProjectDir)GFIR/gfir_lms.c" />
+    <ClCompile Include="$(ProjectDir)GFIR/lms.c" />
+    <ClCompile Include="$(ProjectDir)GFIR/recipes.c" />
+    <ClCompile Include="$(ProjectDir)GFIR/rounding.c" />
+    <ClCompile Include="$(ProjectDir)ConnectionFTDI/ConnectionFT601.cpp" />
+    <ClCompile Include="$(ProjectDir)ConnectionFTDI/ConnectionFT601Entry.cpp" />
+    <ClCompile Include="$(ProjectDir)ConnectionXillybus/ConnectionXillybusEntry.cpp" />
+    <ClCompile Include="$(ProjectDir)ConnectionXillybus/ConnectionXillybus.cpp" />
+    <ClCompile Include="$(ProjectDir)BuiltinConnections.cpp" />
+    <ClCompile Include="$(ProjectDir)limeRFE/limeRFE_cmd.cpp" />
+    <ClCompile Include="$(ProjectDir)limeRFE/limeRFE_api.cpp" />
+    <ClCompile Include="$(ProjectDir)limeRFE/RFE_Device.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\FirmwareWorks\LimeSuite\ZERO_CHECK.vcxproj">
+      <Project>{13CF46FD-C258-353F-8E6A-C8478237CCB8}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
