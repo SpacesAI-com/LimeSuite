@@ -1,24 +1,21 @@
-/**
-@file	LMS7002M.h
-@author Lime Microsystems (www.limemicro.com)
-@brief	LMS7002M transceiver configuration interface
-*/
-
-#ifndef LMS7API_H
-#define LMS7API_H
-
+// @file	LMS7002M.h
+// @author Lime Microsystems (www.limemicro.com)
+// @brief	LMS7002M transceiver configuration interface
 #include "LimeSuiteConfig.h"
+#include "LMS7002M_RegistersMap.h"
 #include "LMS7002M_parameters.h"
+#include <MCU_BD.h>
 #include <cstdint>
 #include <sstream>
 #include <stdarg.h>
 #include <functional>
 #include <vector>
 
+
+#ifndef LMS7API_H
+#define LMS7API_H
+
 namespace lime{
-class IConnection;
-class LMS7002M_RegistersMap;
-class MCU_BD;
 class BinSearchParam;
 class GridSearchParam;
 
@@ -71,6 +68,7 @@ public:
         bool success;
     };
 
+    virtual ~LMS7002M() {}
     LMS7002M();
 
     /*!
@@ -86,7 +84,6 @@ public:
         return controlPort;
     }
 
-    virtual ~LMS7002M();
 
     /*!
      * Enum for configuring the channel selection.
@@ -414,7 +411,9 @@ public:
 
     void EnableValuesCache(bool enabled = true);
     bool IsValuesCacheEnabled();
-    MCU_BD* GetMCUControls() const;
+    inline  const MCU_BD &  GetMCUControls() const  { return mcuControl; }
+    inline  MCU_BD &        GetMCUControls()        { return mcuControl; }
+
     void EnableCalibrationByMCU(bool enabled);
     float_type GetTemperature();
 
@@ -425,15 +424,22 @@ public:
         LOG_ERROR,
         LOG_DATA
     };
-    void SetLogCallback(std::function<void(const char*, int)> callback);
-    LMS7002M_RegistersMap *BackupRegisterMap(void);
-    void RestoreRegisterMap(LMS7002M_RegistersMap *backup);
-
+    typedef std::function<void(const char*, int)>   log_callback_t;
+    log_callback_t          log_callback        = [](const char*, int){};
+    inline void             SetLogCallback      (const log_callback_t & callback) { log_callback = callback; }
+    LMS7002M_RegistersMap   BackupRegisterMap   ();
+    void                    RestoreRegisterMap  (const LMS7002M_RegistersMap & backup);
 protected:
-    bool mCalibrationByMCU;
-    MCU_BD *mcuControl;
-    bool useCache;
-    LMS7002M_RegistersMap *mRegistersMap;
+    IConnection             * controlPort       = {};
+    MCU_BD                  mcuControl        = {};
+    LMS7002M_RegistersMap   mRegistersMap     = {};
+    int                     opt_gain_tbb[2]     = {-1, -1};
+    bool                    mCalibrationByMCU   = true;
+    bool                    useCache            = false;
+    ///port used for communicating with LMS7002M
+    unsigned                mdevIndex           = {};
+    size_t                  mSelfCalDepth       = {};
+    double                  _cachedRefClockRate = 30.72e6;
 
     static const uint16_t readOnlyRegisters[];
     static const uint16_t readOnlyRegistersMasks[];
@@ -490,16 +496,9 @@ protected:
         va_end(argList);
     }
 
-    std::function<void(const char*, int)> log_callback;
     void Log(LogType type, const char *format, va_list argList);
 
-    ///port used for communicating with LMS7002M
-    IConnection* controlPort;
-    unsigned mdevIndex;
-    size_t mSelfCalDepth;
-    int opt_gain_tbb[2];
-    double _cachedRefClockRate;
-    int LoadConfigLegacyFile(const char* filename);
+    int             LoadConfigLegacyFile(const char* filename);
 };
 }
 #endif

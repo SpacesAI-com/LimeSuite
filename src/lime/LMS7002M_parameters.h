@@ -3,10 +3,10 @@
 @author Lime Microsystems (www.limemicro.com)
 @brief 	List of LMS7002M transceiver control parameters
 */
+#include <stdint.h>
 
 #ifndef LMS7002M_PARAMETERS_H
 #define LMS7002M_PARAMETERS_H
-#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

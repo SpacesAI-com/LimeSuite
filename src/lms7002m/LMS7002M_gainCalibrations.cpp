@@ -4,9 +4,7 @@ using namespace lime;
 
 int LMS7002M::CalibrateTxGainSetup()
 {
-    int status;
-    int ch = Get_SPI_Reg_bits(LMS7param(MAC));
-
+    const int ch = Get_SPI_Reg_bits(LMS7param(MAC));
     uint16_t value = SPI_read(0x0020);
     if( (value & 3) == 1)
         value = value | 0x0014;
@@ -63,8 +61,7 @@ int LMS7002M::CalibrateTxGainSetup()
 
     //CGEN
     SetDefaults(CGEN);
-    status = SetFrequencyCGEN(61.44e6);
-    if(status != 0)
+    if(const int32_t status = SetFrequencyCGEN(61.44e6))
         return status;
 
     //SXR
@@ -84,14 +81,12 @@ int LMS7002M::CalibrateTxGainSetup()
     Modify_SPI_Reg_bits(LMS7param(ISINC_BYP_TXTSP), isinc);
     Modify_SPI_Reg_bits(LMS7param(TSGMODE_TXTSP), 1);
     Modify_SPI_Reg_bits(LMS7param(INSEL_TXTSP), 1);
-    int16_t tsgValue = 0x7FFF;
-    if(txcmixGainMSB == 0 && txcmixGainLSB == 1)
-        tsgValue = 0x3FFF;
-    else if(txcmixGainMSB == 1 && txcmixGainLSB == 0)
-        tsgValue = 0x5A85;
-    else
-        tsgValue = 0x7FFF;
-    LoadDC_REG_IQ(LMS7002M::Tx, tsgValue , tsgValue);
+    const int16_t tsgValue 
+        = (txcmixGainMSB == 0 && txcmixGainLSB == 1) ? 0x3FFF
+        : (txcmixGainMSB == 1 && txcmixGainLSB == 0) ? 0x5A85
+        : 0x7FFF
+        ;
+    LoadDC_REG_IQ(LMS7002M::Tx, tsgValue, tsgValue);
     SetNCOFrequency(LMS7002M::Tx, 0, 0.5e6);
 
     return 0;
@@ -103,15 +98,12 @@ int LMS7002M::CalibrateTxGain(float maxGainOffset_dBFS, float *actualGain_dBFS)
         lime::error("No device connected");
         return -1;
     }
-    int status;
-    int cg_iamp;
-    auto registersBackup = BackupRegisterMap();
-    status = CalibrateTxGainSetup();
-    if(status == 0)
-    {
+    LMS7002M_RegistersMap   registersBackup     = BackupRegisterMap();
+    const int32_t           status              = CalibrateTxGainSetup();
+    int                     cg_iamp             = 1;
+    if(0 == status) {
         cg_iamp = Get_SPI_Reg_bits(LMS7param(CG_IAMP_TBB));
-        while(GetRSSI() < 0x7FFF)
-        {
+        while(GetRSSI() < 0x7FFF) {
             if(++cg_iamp > 63)
                 break;
             Modify_SPI_Reg_bits(LMS7param(CG_IAMP_TBB), cg_iamp);
@@ -122,7 +114,7 @@ int LMS7002M::CalibrateTxGain(float maxGainOffset_dBFS, float *actualGain_dBFS)
     int ind = this->GetActiveChannelIndex()%2;
     opt_gain_tbb[ind] = cg_iamp > 1 ? cg_iamp-1 : 1;
 
-    if (status == 0)
+    if(0 == status)
         Modify_SPI_Reg_bits(LMS7param(CG_IAMP_TBB), opt_gain_tbb[ind]);
     //logic reset
     Modify_SPI_Reg_bits(LMS7param(LRST_TX_A), 0);

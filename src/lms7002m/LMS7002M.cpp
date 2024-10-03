@@ -112,24 +112,14 @@ void LMS7002M::SetConnection(IConnection* port, const size_t devIndex)
             else
                 byte_array_size = 1024 * 8;
         }
-        mcuControl->Initialize(port, mdevIndex, byte_array_size);
+        mcuControl.Initialize(port, mdevIndex, byte_array_size);
     }
 }
 
 /** @brief Creates LMS7002M main control object.
 It requires IConnection to be set by SetConnection() to communicate with chip
 */
-LMS7002M::LMS7002M() :
-    useCache(0),
-    mRegistersMap(new LMS7002M_RegistersMap()),
-    controlPort(nullptr),
-    mdevIndex(0),
-    mSelfCalDepth(0),
-    _cachedRefClockRate(30.72e6)
-{
-    mCalibrationByMCU = true;
-    opt_gain_tbb[0] = -1;
-    opt_gain_tbb[1] = -1;
+LMS7002M::LMS7002M() {
     //memory intervals for registers tests and calibration algorithms
     MemorySectionAddresses[LimeLight][0] = 0x0020;
     MemorySectionAddresses[LimeLight][1] = 0x002F;
@@ -196,15 +186,8 @@ LMS7002M::LMS7002M() :
     MemorySectionAddresses[RSSI_DC_CONFIG][0] = 0x0640;
     MemorySectionAddresses[RSSI_DC_CONFIG][1] = 0x0641;
 
-    mRegistersMap->InitializeDefaultValues(LMS7parameterList);
-    mcuControl = new MCU_BD();
-    mcuControl->Initialize(nullptr);
-}
-
-LMS7002M::~LMS7002M()
-{
-    delete mcuControl;
-    delete mRegistersMap;
+    mRegistersMap.InitializeDefaultValues(LMS7parameterList);
+    mcuControl.Initialize(nullptr);
 }
 
 void LMS7002M::SetActiveChannel(const Channel ch)
@@ -373,7 +356,7 @@ int LMS7002M::ResetChip()
         status = controlPort->DeviceReset(mdevIndex);
     else
         lime::warning("No device connected");
-    mRegistersMap->InitializeDefaultValues(LMS7parameterList);
+    mRegistersMap.InitializeDefaultValues(LMS7parameterList);
     status |= Modify_SPI_Reg_bits(LMS7param(MIMO_SISO), 0); //enable B channel after reset
     return status;
 }
@@ -1921,7 +1904,7 @@ int LMS7002M::GetGFIRCoefficients(bool tx, uint8_t GFIR_index, int16_t *coef, ui
     {
         const int channel = Get_SPI_Reg_bits(LMS7param(MAC), false) > 1 ? 1 : 0;
         for (index = 0; index < coefCount; ++index)
-            coef[index] = mRegistersMap->GetValue(channel, addresses[index]);
+            coef[index] = mRegistersMap.GetValue(channel, addresses[index]);
         status = 0;
     }
 
@@ -1937,14 +1920,14 @@ int LMS7002M::SPI_write(uint16_t address, uint16_t data, bool toChip)
 {
     if(address == 0x0640 || address == 0x0641)
     {
-        MCU_BD* mcu = GetMCUControls();
-        mcu->RunProcedure(MCU_FUNCTION_GET_PROGRAM_ID);
-        if(mcu->WaitForMCU(100) != MCU_ID_CALIBRATIONS_SINGLE_IMAGE)
-            mcu->Program_MCU(mcu_program_lms7_dc_iq_calibration_bin, IConnection::MCU_PROG_MODE::SRAM);
+        MCU_BD & mcu = GetMCUControls();
+        mcu.RunProcedure(MCU_FUNCTION_GET_PROGRAM_ID);
+        if(mcu.WaitForMCU(100) != MCU_ID_CALIBRATIONS_SINGLE_IMAGE)
+            mcu.Program_MCU(mcu_program_lms7_dc_iq_calibration_bin, IConnection::MCU_PROG_MODE::SRAM);
         SPI_write(0x002D, address);
         SPI_write(0x020C, data);
-        mcu->RunProcedure(7);
-        mcu->WaitForMCU(50);
+        mcu.RunProcedure(7);
+        mcu.WaitForMCU(50);
         return SPI_read(0x040B) == data ? 0 : -1;
     }
     else
@@ -1972,10 +1955,10 @@ uint16_t LMS7002M::SPI_read(uint16_t address, bool fromChip, int *status)
     {
         if (status && !controlPort)
             *status = ReportError("chip not connected");
-        int mac = mRegistersMap->GetValue(0, LMS7param(MAC).address) & 0x0003;
+        int mac = mRegistersMap.GetValue(0, LMS7param(MAC).address) & 0x0003;
         int regNo = (mac == 2)? 1 : 0; //only when MAC is B -> use register space B
         if (address < 0x0100) regNo = 0; //force A when below MAC mapped register space
-        return mRegistersMap->GetValue(regNo, address);
+        return mRegistersMap.GetValue(regNo, address);
     }
     if(controlPort)
     {
@@ -1983,13 +1966,13 @@ uint16_t LMS7002M::SPI_read(uint16_t address, bool fromChip, int *status)
         int st;
         if(address == 0x0640 || address == 0x0641)
         {
-            MCU_BD* mcu = GetMCUControls();
-            mcu->RunProcedure(MCU_FUNCTION_GET_PROGRAM_ID);
-            if(mcu->WaitForMCU(100) != MCU_ID_CALIBRATIONS_SINGLE_IMAGE)
-                mcu->Program_MCU(mcu_program_lms7_dc_iq_calibration_bin, IConnection::MCU_PROG_MODE::SRAM);
+            MCU_BD & mcu = GetMCUControls();
+            mcu.RunProcedure(MCU_FUNCTION_GET_PROGRAM_ID);
+            if(mcu.WaitForMCU(100) != MCU_ID_CALIBRATIONS_SINGLE_IMAGE)
+                mcu.Program_MCU(mcu_program_lms7_dc_iq_calibration_bin, IConnection::MCU_PROG_MODE::SRAM);
             SPI_write(0x002D, address);
-            mcu->RunProcedure(8);
-            mcu->WaitForMCU(50);
+            mcu.RunProcedure(8);
+            mcu.WaitForMCU(50);
             uint16_t rdVal = SPI_read(0x040B, true, status);
             return rdVal;
         }
@@ -2011,7 +1994,7 @@ uint16_t LMS7002M::SPI_read(uint16_t address, bool fromChip, int *status)
 int LMS7002M::SPI_write_batch(const uint16_t* spiAddr, const uint16_t* spiData, uint16_t cnt, bool toChip)
 {
     toChip |= !useCache;
-    int mac = mRegistersMap->GetValue(0, LMS7param(MAC).address) & 0x0003;
+    int mac = mRegistersMap.GetValue(0, LMS7param(MAC).address) & 0x0003;
     std::vector<uint32_t> data;
     for (size_t i = 0; i < cnt; ++i) {
         //write which register cache based on MAC bits
@@ -2020,21 +2003,21 @@ int LMS7002M::SPI_write_batch(const uint16_t* spiAddr, const uint16_t* spiData, 
         bool wr1 = ((mac & 0x2) != 0) && (spiAddr[i] >= 0x0100);
 
         if (!toChip) {
-            if (wr0 && (mRegistersMap->GetValue(0, spiAddr[i]) == spiData[i]))
+            if (wr0 && (mRegistersMap.GetValue(0, spiAddr[i]) == spiData[i]))
                 wr0 = false;
-            if (wr1 && (mRegistersMap->GetValue(1, spiAddr[i]) == spiData[i]))
+            if (wr1 && (mRegistersMap.GetValue(1, spiAddr[i]) == spiData[i]))
                 wr1 = false;
             if (!(wr0 || wr1))
                 continue;
         }
 
         data.push_back ((1 << 31) | (uint32_t(spiAddr[i]) << 16) | spiData[i]); //msbit 1=SPI write
-        if (wr0) mRegistersMap->SetValue(0, spiAddr[i], spiData[i]);
-        if (wr1) mRegistersMap->SetValue(1, spiAddr[i], spiData[i]);
+        if (wr0) mRegistersMap.SetValue(0, spiAddr[i], spiData[i]);
+        if (wr1) mRegistersMap.SetValue(1, spiAddr[i], spiData[i]);
 
         //refresh mac, because batch might also change active channel
         if(spiAddr[i] == LMS7param(MAC).address)
-            mac = mRegistersMap->GetValue(0, LMS7param(MAC).address) & 0x0003;
+            mac = mRegistersMap.GetValue(0, LMS7param(MAC).address) & 0x0003;
     }
 
     if (data.size() == 0)
@@ -2073,7 +2056,7 @@ int LMS7002M::SPI_read_batch(const uint16_t* spiAddr, uint16_t* spiData, uint16_
     int status = controlPort->ReadLMS7002MSPI(dataWr.data(), dataRd.data(), cnt,mdevIndex);
     if (status != 0) return status;
 
-    int mac = mRegistersMap->GetValue(0, LMS7param(MAC).address) & 0x0003;
+    int mac = mRegistersMap.GetValue(0, LMS7param(MAC).address) & 0x0003;
 
     for (size_t i = 0; i < cnt; ++i)
     {
@@ -2084,8 +2067,8 @@ int LMS7002M::SPI_read_batch(const uint16_t* spiAddr, uint16_t* spiData, uint16_
         bool wr0 = ((mac & 0x1) != 0) or (spiAddr[i] < 0x0100);
         bool wr1 = ((mac & 0x2) != 0) and (spiAddr[i] >= 0x0100);
 
-        if (wr0) mRegistersMap->SetValue(0, spiAddr[i], spiData[i]);
-        if (wr1) mRegistersMap->SetValue(1, spiAddr[i], spiData[i]);
+        if (wr0) mRegistersMap.SetValue(0, spiAddr[i], spiData[i]);
+        if (wr1) mRegistersMap.SetValue(1, spiAddr[i], spiData[i]);
     }
     return 0;
 }
@@ -2292,7 +2275,7 @@ int LMS7002M::SetDefaults(MemorySection module)
     for(uint32_t address = MemorySectionAddresses[module][0]; address <= MemorySectionAddresses[module][1]; ++address)
     {
         addrs.push_back(address);
-        values.push_back(mRegistersMap->GetDefaultValue(address));
+        values.push_back(mRegistersMap.GetDefaultValue(address));
     }
     status = SPI_write_batch(&addrs[0], &values[0], addrs.size());
     return status;
@@ -2309,7 +2292,7 @@ bool LMS7002M::IsSynced()
 
     Channel ch = this->GetActiveChannel();
 
-    vector<uint16_t> addrToRead = mRegistersMap->GetUsedAddresses(0);
+    vector<uint16_t> addrToRead = mRegistersMap.GetUsedAddresses(0);
     vector<uint16_t> dataReceived;
     dataReceived.resize(addrToRead.size(), 0);
 
@@ -2331,7 +2314,7 @@ bool LMS7002M::IsSynced()
     //check if local copy matches chip
     for (uint16_t i = 0; i < addrToRead.size(); ++i)
     {
-        uint16_t regValue = mRegistersMap->GetValue(0, addrToRead[i]);
+        uint16_t regValue = mRegistersMap.GetValue(0, addrToRead[i]);
         if(addrToRead[i] <= readOnlyRegisters[sizeof(readOnlyRegisters)/sizeof(uint16_t)-1] && addrToRead[i] >= readOnlyRegisters[0])
         {
             //mask out readonly bits
@@ -2352,7 +2335,7 @@ bool LMS7002M::IsSynced()
     }
 
     addrToRead.clear(); //add only B channel addresses
-    addrToRead = mRegistersMap->GetUsedAddresses(1);
+    addrToRead = mRegistersMap.GetUsedAddresses(1);
     dataWr.resize(addrToRead.size());
     dataRd.resize(addrToRead.size());
     for(size_t i = 0; i < addrToRead.size(); ++i)
@@ -2370,7 +2353,7 @@ bool LMS7002M::IsSynced()
     //check if local copy matches chip
     for (uint16_t i = 0; i < addrToRead.size(); ++i)
     {
-        uint16_t regValue = mRegistersMap->GetValue(1, addrToRead[i]);
+        uint16_t regValue = mRegistersMap.GetValue(1, addrToRead[i]);
         if(addrToRead[i] <= readOnlyRegisters[sizeof(readOnlyRegisters)/sizeof(uint16_t)-1] && addrToRead[i] >= readOnlyRegisters[0])
         {
             //mask out readonly bits
@@ -2411,14 +2394,14 @@ int LMS7002M::UploadAll()
     vector<uint16_t> addrToWrite;
     vector<uint16_t> dataToWrite;
 
-    uint16_t x0020_value = mRegistersMap->GetValue(0, 0x0020);
+    uint16_t x0020_value = mRegistersMap.GetValue(0, 0x0020);
     this->SetActiveChannel(ChA); //select A channel
 
-    addrToWrite = mRegistersMap->GetUsedAddresses(0);
+    addrToWrite = mRegistersMap.GetUsedAddresses(0);
     //remove 0x0020 register from list, to not change MAC
     addrToWrite.erase( find(addrToWrite.begin(), addrToWrite.end(), 0x0020) );
     for (auto address : addrToWrite)
-        dataToWrite.push_back(mRegistersMap->GetValue(0, address));
+        dataToWrite.push_back(mRegistersMap.GetValue(0, address));
 
     status = SPI_write_batch(&addrToWrite[0], &dataToWrite[0], addrToWrite.size(), true);
     if (status != 0)
@@ -2431,11 +2414,11 @@ int LMS7002M::UploadAll()
     if (status != 0)
         return status;
 
-    addrToWrite = mRegistersMap->GetUsedAddresses(1);
+    addrToWrite = mRegistersMap.GetUsedAddresses(1);
     dataToWrite.clear();
     for (auto address : addrToWrite)
     {
-        dataToWrite.push_back(mRegistersMap->GetValue(1, address));
+        dataToWrite.push_back(mRegistersMap.GetValue(1, address));
     }
     this->SetActiveChannel(ChB); //select B channel
     status = SPI_write_batch(&addrToWrite[0], &dataToWrite[0], addrToWrite.size(), true);
@@ -2458,7 +2441,7 @@ int LMS7002M::DownloadAll()
     int status;
     Channel ch = this->GetActiveChannel(false);
 
-    vector<uint16_t> addrToRead = mRegistersMap->GetUsedAddresses(0);
+    vector<uint16_t> addrToRead = mRegistersMap.GetUsedAddresses(0);
     vector<uint16_t> dataReceived;
     dataReceived.resize(addrToRead.size(), 0);
     this->SetActiveChannel(ChA);
@@ -2468,11 +2451,11 @@ int LMS7002M::DownloadAll()
 
     for (uint16_t i = 0; i < addrToRead.size(); ++i)
     {
-        mRegistersMap->SetValue(0, addrToRead[i], dataReceived[i]);
+        mRegistersMap.SetValue(0, addrToRead[i], dataReceived[i]);
     }
 
     addrToRead.clear(); //add only B channel addresses
-    addrToRead = mRegistersMap->GetUsedAddresses(1);
+    addrToRead = mRegistersMap.GetUsedAddresses(1);
     dataReceived.resize(addrToRead.size(), 0);
 
     this->SetActiveChannel(ChB);
@@ -2480,7 +2463,7 @@ int LMS7002M::DownloadAll()
     if (status != 0)
         return status;
     for (uint16_t i = 0; i < addrToRead.size(); ++i)
-        mRegistersMap->SetValue(1, addrToRead[i], dataReceived[i]);
+        mRegistersMap.SetValue(1, addrToRead[i], dataReceived[i]);
 
     this->SetActiveChannel(ch); //retore previously used channel
 
@@ -2730,10 +2713,6 @@ bool LMS7002M::IsValuesCacheEnabled()
     return useCache;
 }
 
-MCU_BD* LMS7002M::GetMCUControls() const
-{
-    return mcuControl;
-}
 
 void LMS7002M::EnableCalibrationByMCU(bool enabled)
 {
@@ -2763,17 +2742,12 @@ float_type LMS7002M::GetTemperature()
     return temperature;
 }
 
-void LMS7002M::SetLogCallback(std::function<void(const char*, int)> callback)
-{
-    log_callback = callback;
-}
-
 int LMS7002M::CopyChannelRegisters(const Channel src, const Channel dest, const bool copySX)
 {
     Channel ch = this->GetActiveChannel(); //remember used channel
 
     vector<uint16_t> addrToWrite;
-    addrToWrite = mRegistersMap->GetUsedAddresses(1);
+    addrToWrite = mRegistersMap.GetUsedAddresses(1);
     if(!copySX)
     {
         for(uint32_t address = MemorySectionAddresses[SX][0]; address <= MemorySectionAddresses[SX][1]; ++address)
@@ -2781,8 +2755,8 @@ int LMS7002M::CopyChannelRegisters(const Channel src, const Channel dest, const 
     }
     for (auto address : addrToWrite)
     {
-        uint16_t data = mRegistersMap->GetValue(src == ChA ? 0 : 1, address);
-        mRegistersMap->SetValue(dest == ChA ? 0 : 1, address, data);
+        uint16_t data = mRegistersMap.GetValue(src == ChA ? 0 : 1, address);
+        mRegistersMap.SetValue(dest == ChA ? 0 : 1, address, data);
     }
     if(controlPort)
         UploadAll();

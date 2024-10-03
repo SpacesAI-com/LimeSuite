@@ -2,16 +2,6 @@
 #include "LMS7002M_parameters.h"
 using namespace lime;
 
-LMS7002M_RegistersMap::LMS7002M_RegistersMap()
-{
-
-}
-
-LMS7002M_RegistersMap::~LMS7002M_RegistersMap()
-{
-
-}
-
 uint16_t LMS7002M_RegistersMap::GetDefaultValue(uint16_t address) const
 {
     auto iter = mChannelA.find(address);

@@ -1508,7 +1508,7 @@ int LMS7_Device::Program(const std::string& mode, const char* data, size_t len, 
         lms->SPI_write(0x0002, 0x0000);
         return lms->SPI_write(0x0002, 0x0003);
     } else if (mode == program_mode::mcuRAM || mode == program_mode::mcuEEPROM){
-        lime::MCU_BD *mcu = lms_list.at(lms_chip_id)->GetMCUControls();
+        lime::MCU_BD & mcu = lms_list.at(lms_chip_id)->GetMCUControls();
         lime::IConnection::MCU_PROG_MODE prog_mode;
         uint8_t bin[lime::MCU_BD::cMaxFWSize];
         memcpy(bin,data,len>sizeof(bin) ? sizeof(bin) : len);
@@ -1517,9 +1517,9 @@ int LMS7_Device::Program(const std::string& mode, const char* data, size_t len, 
             prog_mode = lime::IConnection::MCU_PROG_MODE::SRAM;
         else
             prog_mode = lime::IConnection::MCU_PROG_MODE::EEPROM_AND_SRAM;
-        mcu->callback = callback;
-        mcu->Program_MCU(bin,prog_mode);
-        mcu->callback = nullptr;
+        mcu.callback = callback;
+        mcu.Program_MCU(bin,prog_mode);
+        mcu.callback = nullptr;
         return 0;
     }
 
@@ -1869,32 +1869,32 @@ void LMS7_Device::SetHardwareTimestamp(const uint64_t now)
 
 int LMS7_Device::MCU_AGCStart(uint32_t wantedRSSI)
 {
-    lime::MCU_BD *mcu = lms_list.at(lms_chip_id)->GetMCUControls();
+    lime::MCU_BD & mcu = lms_list.at(lms_chip_id)->GetMCUControls();
     lms_list.at(lms_chip_id)->Modify_SPI_Reg_bits(0x0006, 0, 0, 0);
 
-    uint8_t mcuID = mcu->ReadMCUProgramID();
+    uint8_t mcuID = mcu.ReadMCUProgramID();
     lime::debug("Current MCU firmware: %i, expected %i", mcuID, MCU_ID_CALIBRATIONS_SINGLE_IMAGE);
     if(mcuID != MCU_ID_CALIBRATIONS_SINGLE_IMAGE)
     {
         lime::debug("Uploading MCU AGC firmware");
-        int status = mcu->Program_MCU(mcu_program_lms7_dc_iq_calibration_bin, lime::IConnection::MCU_PROG_MODE::SRAM);
+        int status = mcu.Program_MCU(mcu_program_lms7_dc_iq_calibration_bin, lime::IConnection::MCU_PROG_MODE::SRAM);
         lime::info("MCU AGC firmware uploaded");
         if(status != 0)
             return status;
     }
 
     long refClk = lms_list.at(lms_chip_id)->GetReferenceClk_SX(false);
-    mcu->SetParameter(MCU_BD::MCU_REF_CLK, refClk);
+    mcu.SetParameter(MCU_BD::MCU_REF_CLK, refClk);
 
     lms_list.at(lms_chip_id)->Modify_SPI_Reg_bits(0x002D, 15, 0, wantedRSSI >> 2);
-    mcu->RunProcedure(MCU_FUNCTION_AGC);
+    mcu.RunProcedure(MCU_FUNCTION_AGC);
     return 0;
 }
 
 int LMS7_Device::MCU_AGCStop()
 {
-    lime::MCU_BD *mcu = lms_list.at(lms_chip_id)->GetMCUControls();
-    mcu->RunProcedure(0);
+    lime::MCU_BD  & mcu = lms_list.at(lms_chip_id)->GetMCUControls();
+    mcu.RunProcedure(0);
     lms_list.at(lms_chip_id)->Modify_SPI_Reg_bits(0x0006, 0, 0, 0);
     return 0;
 }

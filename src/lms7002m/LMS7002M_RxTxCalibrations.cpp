@@ -225,23 +225,23 @@ int LMS7002M::CalibrateTx(float_type bandwidth_Hz, bool useExtLoopback)
                     band ? "BAND2" : "BAND1",
                     Get_SPI_Reg_bits(LMS7_CG_IAMP_TBB));
 
-    uint8_t mcuID = mcuControl->ReadMCUProgramID();
+    uint8_t mcuID = mcuControl.ReadMCUProgramID();
     verbose_printf("Current MCU firmware: %i, %s\n", mcuID,
         mcuID == MCU_ID_CALIBRATIONS_SINGLE_IMAGE ? "DC/IQ calibration full":"unknown");
     if(mcuID != MCU_ID_CALIBRATIONS_SINGLE_IMAGE)
     {
         verbose_printf("Uploading DC/IQ calibration firmware\n");
-        status = mcuControl->Program_MCU(mcu_program_lms7_dc_iq_calibration_bin, IConnection::MCU_PROG_MODE::SRAM);
+        status = mcuControl.Program_MCU(mcu_program_lms7_dc_iq_calibration_bin, IConnection::MCU_PROG_MODE::SRAM);
         if(status != 0)
             return status;
     }
 
     //set reference clock parameter inside MCU
     long refClk = GetReferenceClk_SX(false);
-    mcuControl->SetParameter(MCU_BD::MCU_REF_CLK, refClk);
+    mcuControl.SetParameter(MCU_BD::MCU_REF_CLK, refClk);
     verbose_printf("MCU Ref. clock: %g MHz\n", refClk / 1e6);
     //Tx Rx separation bandwidth while calibrating
-    mcuControl->SetParameter(MCU_BD::MCU_BW, bandwidth_Hz);
+    mcuControl.SetParameter(MCU_BD::MCU_BW, bandwidth_Hz);
 
     {
        //BoardLoopbackStore onBoardLoopbackRestoration(GetConnection());
@@ -251,10 +251,10 @@ int LMS7002M::CalibrateTx(float_type bandwidth_Hz, bool useExtLoopback)
             if(status != 0)
                 return ReportError(EINVAL, "Tx Calibration: Failed to enable external loopback");
             uint8_t loopPair = GetExtLoopPair(*this, true);
-            mcuControl->SetParameter(MCU_BD::MCU_EXT_LOOPBACK_PAIR, loopPair);
+            mcuControl.SetParameter(MCU_BD::MCU_EXT_LOOPBACK_PAIR, loopPair);
         }
-        mcuControl->RunProcedure(useExtLoopback ? MCU_FUNCTION_CALIBRATE_TX_EXTLOOPB : MCU_FUNCTION_CALIBRATE_TX);
-        status = mcuControl->WaitForMCU(1000);
+        mcuControl.RunProcedure(useExtLoopback ? MCU_FUNCTION_CALIBRATE_TX_EXTLOOPB : MCU_FUNCTION_CALIBRATE_TX);
+        status = mcuControl.WaitForMCU(1000);
         if(status != MCU_BD::MCU_NO_ERROR)
             return ReportError(EINVAL, "Tx Calibration: MCU error %i (%s)", status, MCU_BD::MCUStatusMessage(status));
     }
@@ -334,23 +334,23 @@ int LMS7002M::CalibrateRx(float_type bandwidth_Hz, bool useExtLoopback)
 
     int dcoffi(0), dcoffq(0), gcorri(0), gcorrq(0), phaseOffset(0);
     //check if MCU has correct firmware
-    uint8_t mcuID = mcuControl->ReadMCUProgramID();
+    uint8_t mcuID = mcuControl.ReadMCUProgramID();
     verbose_printf("Current MCU firmware: %i, %s\n", mcuID,
         mcuID == MCU_ID_CALIBRATIONS_SINGLE_IMAGE ? "DC/IQ calibration full" : "unknown");
     if(mcuID != MCU_ID_CALIBRATIONS_SINGLE_IMAGE)
     {
         verbose_printf("Uploading DC/IQ calibration firmware\n");
-        status = mcuControl->Program_MCU(mcu_program_lms7_dc_iq_calibration_bin, IConnection::MCU_PROG_MODE::SRAM);
+        status = mcuControl.Program_MCU(mcu_program_lms7_dc_iq_calibration_bin, IConnection::MCU_PROG_MODE::SRAM);
         if(status != 0)
             return status;
     }
 
     //set reference clock parameter inside MCU
     long refClk = GetReferenceClk_SX(false);
-    mcuControl->SetParameter(MCU_BD::MCU_REF_CLK, refClk);
+    mcuControl.SetParameter(MCU_BD::MCU_REF_CLK, refClk);
     verbose_printf("MCU Ref. clock: %g MHz\n", refClk / 1e6);
     //Tx Rx separation bandwidth while calibrating
-    mcuControl->SetParameter(MCU_BD::MCU_BW, bandwidth_Hz);
+    mcuControl.SetParameter(MCU_BD::MCU_BW, bandwidth_Hz);
 
     {
         //BoardLoopbackStore onBoardLoopbackRestoration(GetConnection());
@@ -360,11 +360,11 @@ int LMS7002M::CalibrateRx(float_type bandwidth_Hz, bool useExtLoopback)
             if(status != 0)
                 return ReportError(EINVAL, "Rx Calibration: Failed to enable external loopback");
             uint8_t loopPair = GetExtLoopPair(*this, false);
-            mcuControl->SetParameter(MCU_BD::MCU_EXT_LOOPBACK_PAIR, loopPair);
+            mcuControl.SetParameter(MCU_BD::MCU_EXT_LOOPBACK_PAIR, loopPair);
         }
 
-        mcuControl->RunProcedure(useExtLoopback ? MCU_FUNCTION_CALIBRATE_RX_EXTLOOPB : MCU_FUNCTION_CALIBRATE_RX);
-        status = mcuControl->WaitForMCU(1000);
+        mcuControl.RunProcedure(useExtLoopback ? MCU_FUNCTION_CALIBRATE_RX_EXTLOOPB : MCU_FUNCTION_CALIBRATE_RX);
+        status = mcuControl.WaitForMCU(1000);
         if(status != MCU_BD::MCU_NO_ERROR)
             return ReportError(EINVAL, "Rx calibration: MCU error %i (%s)", status, MCU_BD::MCUStatusMessage(status));
     }

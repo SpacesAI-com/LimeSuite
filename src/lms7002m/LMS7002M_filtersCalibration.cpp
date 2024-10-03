@@ -30,18 +30,17 @@ const float_type TxLPF_RF_LimitLowMid = 40e6;
 const float_type TxLPF_RF_LimitMidHigh = 50e6;
 const float_type TxLPF_RF_LimitHigh = 130e6;
 
-LMS7002M_RegistersMap *LMS7002M::BackupRegisterMap(void)
+LMS7002M_RegistersMap LMS7002M::BackupRegisterMap(void)
 {
     //BackupAllRegisters(); return NULL;
-    auto backup = new LMS7002M_RegistersMap();
     Channel chBck = this->GetActiveChannel();
     this->SetActiveChannel(ChA);
-    *backup = *mRegistersMap;
+    LMS7002M_RegistersMap backup = mRegistersMap;
     this->SetActiveChannel(chBck);
     return backup;
 }
 
-void LMS7002M::RestoreRegisterMap(LMS7002M_RegistersMap *backup)
+void LMS7002M::RestoreRegisterMap(const LMS7002M_RegistersMap & backup)
 {
     //RestoreAllRegisters(); return;
     Channel chBck = this->GetActiveChannel();
@@ -51,11 +50,11 @@ void LMS7002M::RestoreRegisterMap(LMS7002M_RegistersMap *backup)
         //determine addresses that have been changed
         //and restore backup to the main register map
         std::vector<uint16_t> restoreAddrs, restoreData;
-        for (const uint16_t addr : mRegistersMap->GetUsedAddresses(ch))
+        for (const uint16_t addr : mRegistersMap.GetUsedAddresses(ch))
         {
-            uint16_t original = backup->GetValue(ch, addr);
-            uint16_t current = mRegistersMap->GetValue(ch, addr);
-            mRegistersMap->SetValue(ch, addr, original);
+            uint16_t original = backup.GetValue(ch, addr);
+            uint16_t current = mRegistersMap.GetValue(ch, addr);
+            mRegistersMap.SetValue(ch, addr, original);
 
             if (ch == 1 and addr < 0x0100) continue;
             if (original == current) continue;
@@ -69,8 +68,6 @@ void LMS7002M::RestoreRegisterMap(LMS7002M_RegistersMap *backup)
     }
 
     //cleanup
-    delete backup;
-    backup = nullptr;
     this->SetActiveChannel(chBck);
 }
 
@@ -87,21 +84,21 @@ int LMS7002M::TuneRxFilter(float_type rx_lpf_freq_RF)
         Log(LOG_WARNING, "Rx LPF min bandwidth is 4MHz when TIA gain is set to -12 dB");
     }
 
-    if(mcuControl->ReadMCUProgramID() != MCU_ID_CALIBRATIONS_SINGLE_IMAGE)
+    if(mcuControl.ReadMCUProgramID() != MCU_ID_CALIBRATIONS_SINGLE_IMAGE)
     {
-        if((status = mcuControl->Program_MCU(mcu_program_lms7_dc_iq_calibration_bin, IConnection::MCU_PROG_MODE::SRAM)))
+        if((status = mcuControl.Program_MCU(mcu_program_lms7_dc_iq_calibration_bin, IConnection::MCU_PROG_MODE::SRAM)))
             return ReportError(status, "Tune Rx Filter: failed to program MCU");
     }
 
     //set reference clock parameter inside MCU
     long refClk = GetReferenceClk_SX(false);
-    mcuControl->SetParameter(MCU_BD::MCU_REF_CLK, refClk);
+    mcuControl.SetParameter(MCU_BD::MCU_REF_CLK, refClk);
     lime::debug("MCU Ref. clock: %g MHz", refClk / 1e6);
     //set bandwidth for MCU to read from register, value is integer stored in MHz
-    mcuControl->SetParameter(MCU_BD::MCU_BW, rx_lpf_freq_RF);
-    mcuControl->RunProcedure(5);
+    mcuControl.SetParameter(MCU_BD::MCU_BW, rx_lpf_freq_RF);
+    mcuControl.RunProcedure(5);
 
-    status = mcuControl->WaitForMCU(1000);
+    status = mcuControl.WaitForMCU(1000);
     if(status != MCU_BD::MCU_NO_ERROR)
     {
         lime::error("Tune Rx Filter: MCU error %i (%s)", status, MCU_BD::MCUStatusMessage(status));
@@ -139,9 +136,9 @@ int LMS7002M::TuneTxFilter(const float_type tx_lpf_freq_RF)
         return -1;
     }
 
-    if(mcuControl->ReadMCUProgramID() != MCU_ID_CALIBRATIONS_SINGLE_IMAGE)
+    if(mcuControl.ReadMCUProgramID() != MCU_ID_CALIBRATIONS_SINGLE_IMAGE)
     {
-        if((status = mcuControl->Program_MCU(mcu_program_lms7_dc_iq_calibration_bin, IConnection::MCU_PROG_MODE::SRAM)))
+        if((status = mcuControl.Program_MCU(mcu_program_lms7_dc_iq_calibration_bin, IConnection::MCU_PROG_MODE::SRAM)))
             return ReportError(status, "Tune Tx Filter: failed to program MCU");
     }
 
@@ -150,13 +147,13 @@ int LMS7002M::TuneTxFilter(const float_type tx_lpf_freq_RF)
 
     //set reference clock parameter inside MCU
     long refClk = GetReferenceClk_SX(false);
-    mcuControl->SetParameter(MCU_BD::MCU_REF_CLK, refClk);
+    mcuControl.SetParameter(MCU_BD::MCU_REF_CLK, refClk);
     lime::debug("MCU Ref. clock: %g MHz", refClk / 1e6);
     //set bandwidth for MCU to read from register, value is integer stored in MHz
-    mcuControl->SetParameter(MCU_BD::MCU_BW, tx_lpf_freq_RF);
-    mcuControl->RunProcedure(6);
+    mcuControl.SetParameter(MCU_BD::MCU_BW, tx_lpf_freq_RF);
+    mcuControl.RunProcedure(6);
 
-    status = mcuControl->WaitForMCU(1000);
+    status = mcuControl.WaitForMCU(1000);
     if(status != MCU_BD::MCU_NO_ERROR)
     {
         lime::error("Tune Tx Filter: MCU error %i (%s)", status, MCU_BD::MCUStatusMessage(status));

@@ -1,13 +1,12 @@
-/**
-@file	ADF4002.h
-@author	Lime Microsystems
-@brief	Header for ADF_module.cpp
-*/
+// @file	ADF4002.h
+// @author	Lime Microsystems
+// @brief	Header for ADF_module.cpp
+#include "LimeSuiteConfig.h"
+
 
 #ifndef ADF_MODULE_H
 #define ADF_MODULE_H
 
-#include "LimeSuiteConfig.h"
 
 namespace lime{
 

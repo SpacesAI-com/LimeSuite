@@ -133,11 +133,11 @@ extern "C" {
 #endif
 
 #if defined _WIN32 || defined __CYGWIN__
-#   define CALL_CONV __cdecl
+#   define CALL_CONV //__cdecl
 #   ifdef __GNUC__
 #       define API_EXPORT __attribute__ ((dllexport))
 #   else
-#       define API_EXPORT __declspec(dllexport)
+#       define API_EXPORT //__declspec(dllexport)
 #   endif
 #elif defined _DOXYGEN_ONLY_
 	/** Marks an API routine to be made visible to the dynamic loader.

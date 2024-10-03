@@ -101,7 +101,7 @@ int FPGA::ReadRegisters(const uint32_t *addrs, uint32_t *data, unsigned cnt)
         std::vector<uint32_t> reg_addr;
         for (unsigned i = 0; i < cnt; i++)
         {
-            auto endptr = volatile_regs + sizeof(volatile_regs)/sizeof(*volatile_regs);
+            auto endptr = volatile_regs + std::size(volatile_regs);
             if (std::find(volatile_regs, endptr, addrs[i])==endptr)
             {
                 auto result = regsCache.find(addrs[i]);
@@ -906,11 +906,11 @@ double FPGA::DetectRefClk(double fx3Clk)
     const double clkTbl[] = { 10e6, 30.72e6, 38.4e6, 40e6, 52e6 };
     const uint32_t addr[] = { 0x61, 0x63 };
     const uint32_t vals[] = { 0x0, 0x0 };
-    if (WriteRegisters(addr, vals, 2) != 0)
+    if (WriteRegisters(addr, vals, 2))
         return -1;
 
     auto start = std::chrono::steady_clock::now();
-    if (WriteRegister(0x61, 0x4) != 0)
+    if (WriteRegister(0x61, 0x4))
         return -1;
 
     while (1) //wait for test to finish
@@ -928,24 +928,26 @@ double FPGA::DetectRefClk(double fx3Clk)
     }
 
     const uint32_t addr2[] = { 0x72, 0x73 };
-    uint32_t vals2[2];
+    uint32_t vals2[2] = {};
     if (ReadRegisters(addr2, vals2, 2) != 0)
         return -1;
 
     double count = (vals2[0] | (vals2[1] << 16)); //cock counter
     count *= fx3Clk / fx3Cnt;   //estimate ref clock based on FX3 Clock
     lime::debug("Estimated reference clock %1.4f MHz", count/1e6);
-    unsigned i = 0;
     double delta = 100e6;
 
-    while (i < sizeof(clkTbl) / sizeof(*clkTbl))
-        if (delta < fabs(count - clkTbl[i]))
-            break;
-        else
+    unsigned i = 0;
+    while(i < std::size(clkTbl)) {
+        double curDelta = count - clkTbl[i];
+        if(delta >= fabs(curDelta)) {
             delta = fabs(count - clkTbl[i++]);
-
-    if (i == 0)
+            continue;
+        }
+        if(i)
+            break;
         return -1;
+    }
     lime::info("Reference clock %1.2f MHz", clkTbl[i - 1] / 1e6);
     return clkTbl[i - 1];
 }

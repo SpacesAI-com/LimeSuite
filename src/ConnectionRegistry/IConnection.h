@@ -3,10 +3,6 @@
     @author Lime Microsystems
     @brief Interface class for connection types
 */
-
-#ifndef ICONNECTION_H
-#define ICONNECTION_H
-
 #include "LimeSuiteConfig.h"
 #include "ConnectionHandle.h"
 #include <string>
@@ -14,6 +10,10 @@
 #include <cstring> //memset
 #include <functional>
 #include <stdint.h>
+
+#ifndef ICONNECTION_H
+#define ICONNECTION_H
+
 
 namespace lime{
 

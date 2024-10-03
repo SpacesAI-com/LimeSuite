@@ -4,18 +4,17 @@
 @brief	Header for MCU_BD.cpp
 */
 
-#ifndef MCU_BD_H
-#define MCU_BD_H
-
 #include <atomic>
 #include <string>
 #include "IConnection.h"
 
-namespace lime{
+#ifndef MCU_BD_H
+#define MCU_BD_H
+
+namespace lime
+{
 
 class LMS64CProtocol;
-class IConnection;
-
 class MCU_BD
 {
     public:
