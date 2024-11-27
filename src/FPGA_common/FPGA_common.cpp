@@ -13,7 +13,11 @@ using namespace std;
 
 namespace lime
 {
+	template<typename _t, size_t _arraySize>	
+    static inline constexpr	
+    uint32_t	size	(const _t (&/*staticArray*/)[_arraySize])	noexcept    { return _arraySize; }
 
+// 0x000A
 // 0x000A
 const int RX_EN = 1; //controls both receiver and transmitter
 const int TX_EN = 1 << 1; //used for wfm playback from fpga
@@ -101,7 +105,7 @@ int FPGA::ReadRegisters(const uint32_t *addrs, uint32_t *data, unsigned cnt)
         std::vector<uint32_t> reg_addr;
         for (unsigned i = 0; i < cnt; i++)
         {
-            auto endptr = volatile_regs + std::size(volatile_regs);
+            auto endptr = volatile_regs + size(volatile_regs);
             if (std::find(volatile_regs, endptr, addrs[i])==endptr)
             {
                 auto result = regsCache.find(addrs[i]);
@@ -938,7 +942,7 @@ double FPGA::DetectRefClk(double fx3Clk)
     double delta = 100e6;
 
     unsigned i = 0;
-    while(i < std::size(clkTbl)) {
+    while(i < size(clkTbl)) {
         double curDelta = count - clkTbl[i];
         if(delta >= fabs(curDelta)) {
             delta = fabs(count - clkTbl[i++]);
